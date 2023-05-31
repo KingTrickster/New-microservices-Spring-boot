@@ -1,0 +1,13 @@
+package com.trxjster.apigatewway;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ApiGatewwayApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
