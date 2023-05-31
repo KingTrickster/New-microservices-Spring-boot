@@ -1,0 +1,1 @@
+Run jar in desired port: java -jar .\target\....jar --server.port=DESIRED-PORT
