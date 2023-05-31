@@ -1,5 +1,6 @@
 package com.trxjster.departmentservice.service;
 
+import com.trxjster.common.exception.ResourceNotFoundException;
 import com.trxjster.departmentservice.dto.DepartmentDto;
 import com.trxjster.departmentservice.entity.Department;
 import com.trxjster.departmentservice.mapper.AutoDepartmentMapper;
@@ -25,7 +26,9 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     @Override
     public DepartmentDto getDepartmentByCode(String departmentCode) {
-        Department department = departmentRepository.findByDepartmentCode(departmentCode);
+        Department department = departmentRepository.findByDepartmentCode(departmentCode).orElseThrow(
+                () -> new ResourceNotFoundException("Department", "code", Long.parseLong(departmentCode))
+        );
         DepartmentDto departmentDto = AutoDepartmentMapper.MAPPER.mapToDepartmentDto(department);
         return departmentDto;
     }
