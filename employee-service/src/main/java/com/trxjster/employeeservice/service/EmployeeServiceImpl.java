@@ -5,6 +5,7 @@ import com.trxjster.common.exception.ResourceNotFoundException;
 import com.trxjster.employeeservice.dto.APIResponseDto;
 import com.trxjster.employeeservice.dto.DepartmentDto;
 import com.trxjster.employeeservice.dto.EmployeeDto;
+import com.trxjster.employeeservice.dto.OrganizationDto;
 import com.trxjster.employeeservice.entity.Employee;
 import com.trxjster.employeeservice.mapper.AutoEmployeeMapper;
 import com.trxjster.employeeservice.repository.EmployeeRepository;
@@ -61,17 +62,18 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .bodyToMono(DepartmentDto.class)
                 .block();
 
-        EmployeeDto employeeDto = new EmployeeDto(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail(),
-                employee.getDepartmentCode()
-        );
+        OrganizationDto organizationDto = webClient.get()
+                .uri("http://localhost:8043/api/organizations/" + employee.getOrganizationCode())
+                .retrieve()
+                .bodyToMono(OrganizationDto.class)
+                .block();
+
+        EmployeeDto employeeDto = AutoEmployeeMapper.MAPPER.mapToEmployeeDto(employee);
 
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setEmployeeDto(employeeDto);
         apiResponseDto.setDepartmentDto(departmentDto);
+        apiResponseDto.setOrganizationDto(organizationDto);
 
         return apiResponseDto;
     }
@@ -85,14 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         departmentDto.setDepartmentCode("RD001");
         departmentDto.setDepartmentDescription("Research and Development dpt");
 
-        EmployeeDto employeeDto = new EmployeeDto(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail(),
-                employee.getDepartmentCode()
-        );
-
+        EmployeeDto employeeDto = AutoEmployeeMapper.MAPPER.mapToEmployeeDto(employee);
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setEmployeeDto(employeeDto);
         apiResponseDto.setDepartmentDto(departmentDto);
